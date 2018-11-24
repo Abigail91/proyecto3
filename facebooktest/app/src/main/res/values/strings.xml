@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">facebooktest</string>
+    <string name="facebook_app_id">269853943714715</string>
+    <string name="fb_login_protocol_scheme">fb269853943714715</string>
+    <string name="cerrar_sesion">Cerrar Sesion</string>
+    <string name="login_cancel">cancel</string>
+    <string name="errir">error</string>
+</resources>
