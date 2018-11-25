@@ -1,11 +1,19 @@
 package com.example.nano_.facebooktest;
 
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity {
@@ -393,6 +401,40 @@ public class MapActivity extends AppCompatActivity {
 
 
     private void sendoIniToServer(String posini) {
+
+
+        try {
+
+            String sql = "http://192.168.1.10:9080/proyecto3/rest/server/pasajero?posicion="+posini;
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            URL url = null;
+            HttpURLConnection conn;
+
+            url = new URL(sql);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while((inputLine = in.readLine()) != null){
+                response.append(inputLine);
+            }
+            String json = response.toString();
+            postext.setText(json);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     }
 
-}

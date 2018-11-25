@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ZXingScannerView camara;
     public int carné;
     public static Conductor conductor1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void displayProfileInfo(Profile profile) {
         String id = profile.getId();
         String name = profile.getName();
+        conductor1.setId(profile.getId());
         texto = (TextView) findViewById(R.id.nameTextView);
         texto.setText("id de Facebook: "+ id);
         texto = (TextView) findViewById(R.id.textView5);
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleResult(Result result) {
             String dato = result.getText();
+
             setContentView(R.layout.activity_main);
             conductor1.setCarné(Integer.parseInt(dato));
             camara.stopCamera();

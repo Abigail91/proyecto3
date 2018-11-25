@@ -2,9 +2,17 @@ package com.example.nano_.facebooktest;
 
 public class pasajero {
     public static int carné;
-    public static double nota;
-    public static boolean espera;
-    public static boolean carpooling;
+    public double nota;
+    public boolean espera;
+    public boolean carpooling;
+    public int cant_viajes;
+    public String id;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;}
 //  public node pos;
     public  pasajero(){
 
@@ -41,4 +49,6 @@ public class pasajero {
     public void setNota(double nota) {
         this.nota = nota;
     }
+    public void setCant_viajes(int cant_viajes){this.cant_viajes = cant_viajes;}
+    public int getCant_viajes(){return cant_viajes;}
 }

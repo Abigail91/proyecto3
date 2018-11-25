@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void displayProfileInfo(Profile profile) {
         String id = profile.getId();
+        pasajero1.setId(profile.getId());
         String name = profile.getName();
         texto = (TextView) findViewById(R.id.nameTextView);
         texto.setText("id de Facebook: "+ id);
