@@ -1,10 +1,17 @@
 package com.NKSA.graph;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 
+ * @author NKSA
+ *
+ * @param <T>
+ */
 public class Graph<T extends Comparable<T>> {
 	
 	/**
@@ -13,46 +20,66 @@ public class Graph<T extends Comparable<T>> {
 	@SuppressWarnings("rawtypes")
 	private HashMap<T, Vertex> vertex;
 	private HashMap<Integer, Edge> edge;
+	private ArrayList<ArrayList<T>> adjMatrix = new ArrayList<>();
+	private ArrayList<Edge> edges = new ArrayList<>();
 	@SuppressWarnings("rawtypes")
-	private Vertex parent;
+	private ArrayList<Vertex> vertexes = new ArrayList<>();
+	@SuppressWarnings("rawtypes")
+	private ArrayList<Vertex> vertexes1 = new ArrayList<>();
+	private ArrayList<Integer> weights = new ArrayList<>();
 	
     /**
      * Constructor de la clase por defecto
      */
-    @SuppressWarnings("rawtypes")
-	public Graph() {
-    	this.vertex = new HashMap<T, Vertex>();
-    	this.edge = new HashMap<Integer, Edge>();
-    }
-    
-    /**
-     * Constructor de la clase que recibe una lista de vértices
-     * 
-     * @param vertex
-     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public Graph(ArrayList<Vertex> vertex) {
-    	this.vertex = new HashMap<T, Vertex>();
+	public Graph(ArrayList<T> list, ArrayList<T> relation) {
+		this.vertex = new HashMap<T, Vertex>();
     	this.edge = new HashMap<Integer, Edge>();
-
-    	for(Vertex v : vertex)
-    	    {
+    	Integer posTag1 = 0;
+    	Integer posTag2 = 0;
+    	
+    	for(int i = 0; i < 30; i++) {
+    		Vertex v = new Vertex(list.get(i));
+    		this.vertexes1.add(v);
     		this.vertex.put((T) v.getTag(), v);
-    	    }
+    	}
+    	while(relation.size() > 1) {
+    		for(int i = 0; i < this.vertexes1.size(); i ++) {
+    			if(this.vertexes1.get(i).getTag().equals(relation.get(0))) {
+        			posTag1 = i;
+        		}else if(this.vertexes1.get(i).getTag().equals(relation.get(1))) {
+        			posTag2 = i;
+        		}
+    		}
+    		
+    		Integer weight1 = (int) (Math.random() * 10);
+    		this.weights.add(weight1);
+    		this.insertEdge(this.vertexes1.get(posTag1), this.vertexes1.get(posTag2), weight1);
+    		this.insertEdge(this.vertexes1.get(posTag2), this.vertexes1.get(posTag1), weight1);
+    		relation.remove(0);
+    		relation.remove(0);
+    	}
+    	
+    	
     }
     
+//    /**
+//     * Constructor de la clase que recibe una lista de vértices
+//     * 
+//     * @param vertex
+//     */
+//    @SuppressWarnings({ "rawtypes", "unchecked" })
+//	public Graph(ArrayList<Vertex> vertex) {
+//    	this.vertex = new HashMap<T, Vertex>();
+//    	this.edge = new HashMap<Integer, Edge>();
+//    	
+//    	for(Vertex v : vertex)
+//    	    {
+//    		this.vertex.put((T) v.getTag(), v);
+//    		
+//    	    }
+//    }
     
-    /**
-     * Método que retorna el valor de lo que da la función insertEdge
-     * 
-     * @param v1
-     * @param v2
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-	public boolean insertEdge(Vertex v1, Vertex v2) {
-    	return insertEdge(v1, v2, 1);
-    }
 
 	/**
 	 * Este método valida que no exista la arista que se está pretendiendo crear
@@ -62,10 +89,10 @@ public class Graph<T extends Comparable<T>> {
 	 * @param v2
 	 * @param weight
 	 * @return:
-	 * 			true si se crea la arista y false si ya existía
+	 * 			true si se crea la arista y se añade a la matriz de adyacencia, y false si ya existía
 	 */
-	@SuppressWarnings({ "rawtypes" })
-	private boolean insertEdge(Vertex v1, Vertex v2, int weight) {
+	@SuppressWarnings({ "rawtypes"})
+	public boolean insertEdge(Vertex v1, Vertex v2, int weight) {
 		if(v1.equals(v2)) {
 			return false;
 		}
@@ -82,6 +109,7 @@ public class Graph<T extends Comparable<T>> {
 		this.edge.put(edge.hashCode(), edge);
 		v1.insertNeighbor(edge);
 		v2.insertNeighbor(edge);
+		this.edges.add(edge);
 		return true;
 	}
 	
@@ -100,7 +128,70 @@ public class Graph<T extends Comparable<T>> {
 		}
 		return this.edge.containsKey(edge.hashCode());
 	}
+
+	/**
+	 * Método que define entre cuáles nodos no hay camino y lo inserta en la matriz de adyacencia
+	 */
+	@SuppressWarnings("unchecked")
+	public void createAdjMatrix() {
+		for(int i = 0; i < this.vertexes.size() ; i++) {
+			for(int j = 0; j < this.vertexes.size(); j++) {
+				for(int k = 0; k < this.edges.size(); k++) {
+					ArrayList<T> temp = new ArrayList<>();
+					temp.add((T) this.vertexes.get(i).getTag());
+					temp.add((T) this.vertexes.get(j).getTag());
+					
+					if((this.edges.get(k).getVertex1().equals(this.vertexes.get(i)) && this.edges.get(k).getVertex2().equals(this.vertexes.get(j)))) {
+						temp.add((T) this.edges.get(k).getWeight());
+						if(!isInAdjMatrix(temp)) {
+							adjMatrix.add(temp);
+						}
+						
+					}else {
+						Integer q = -1;
+						temp.add((T) q);
+						if(!isInAdjMatrix(temp)) {
+							adjMatrix.add(temp);
+						}
+					}
+				}
+				
+			}
+		}
+			
+	}
+	/**
+	 * Método que se encarga de definir si ya se estableció una relación entre los 2 vértices incluidos en la lista
+	 * @param list
+	 * @return:
+	 * 		   true, si ya la relación está definida
+	 * 		   false, si no
+	 */
+	private boolean isInAdjMatrix(ArrayList<T> list) {
+		boolean b = false;
+		if(this.adjMatrix != null) {
+			for(int i = 0; i < this.adjMatrix.size(); i++) {
+				if(this.adjMatrix.get(i).get(0).equals(list.get(0)) && this.adjMatrix.get(i).get(1).equals(list.get(1))) {
+					b = true;
+					addAdjMatrix(list, i);
+					break;
+				}
+			}
+		}
+		return b;
+	}
 	
+	/**
+	 * Método que se encarga de analizar si el peso entre 2 nodos está incorrecto y lo corrije
+	 * @param list
+	 * @param indexM
+	 */
+	private void addAdjMatrix(ArrayList<T> list, int indexM) {
+		if(this.adjMatrix.get(indexM).get(2).equals(-1)) {
+			this.adjMatrix.get(indexM).remove(2);
+			this.adjMatrix.get(indexM).add(2, list.get(2));
+		}
+	}
 	
 	
 	/**
@@ -112,6 +203,7 @@ public class Graph<T extends Comparable<T>> {
 	public Edge deleteEdge(Edge edge) {
 		edge.getVertex1().deleteNeighbor(edge);
 		edge.getVertex2().deleteNeighbor(edge);
+		this.edges.remove(edge);
 		return this.edge.remove(edge.hashCode());
 	}
 	
@@ -158,12 +250,20 @@ public class Graph<T extends Comparable<T>> {
 			}
 		}
 		this.vertex.put((T) vertex.getTag(), vertex);
+		this.vertexes.add(vertex);
 		return true;
 	}
-	
+
+	/**
+	 * Método que busca y elimina un nodo o vértice por su etiqueta
+	 * @param tag
+	 * @return:
+	 * 		   el vértice eliminado
+	 */
 	@SuppressWarnings("rawtypes")
 	public Vertex deleteVertex(T tag) {
 		Vertex vertex = this.vertex.remove(tag);
+		this.vertexes.remove(vertex);
 		
 		while(vertex.getCountNeighbors() >= 0) {
 			this.deleteEdge(vertex.getNeighbor(0));
@@ -191,19 +291,23 @@ public class Graph<T extends Comparable<T>> {
 		return new HashSet<Edge>(this.edge.values());
 	}
 
-	/**
-	 * @return the parent
-	 */
-	@SuppressWarnings("rawtypes")
-	public Vertex getParent() {
-		return this.parent.getParent();
+
+	public ArrayList<ArrayList<T>> getAdjMatrix() {
+		return adjMatrix;
 	}
 
-	/**
-	 * @param parent the parent to set
-	 */
-	@SuppressWarnings("rawtypes")
-	public void setParent(Vertex parent) {
-		this.parent = parent.setParent1(parent);
+	public ArrayList<Edge> getEdges() {
+		return edges;
 	}
+
+	@SuppressWarnings("rawtypes")
+	public ArrayList<Vertex> getVertexes() {
+		return vertexes;
+	}
+
+	public ArrayList<Integer> getWeights() {
+		return weights;
+	}
+
+
 }

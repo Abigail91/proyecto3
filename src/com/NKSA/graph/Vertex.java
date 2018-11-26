@@ -1,6 +1,12 @@
 package com.NKSA.graph;
 
 import java.util.ArrayList;
+/**
+ * 
+ * @author NKSA
+ *
+ * @param <T>
+ */
 
 public class Vertex<T extends Comparable<T>> {
 	
@@ -8,10 +14,9 @@ public class Vertex<T extends Comparable<T>> {
 	 * Atributos de la clase
 	 */
 	private ArrayList<Edge> neighborhood;
+	private Integer distance = Integer.MAX_VALUE;
 	@SuppressWarnings("rawtypes")
-	private Vertex parent;
-	@SuppressWarnings("rawtypes")
-	private Graph child;
+	private Vertex previous;
 	private T tag;
 	
 	
@@ -24,20 +29,6 @@ public class Vertex<T extends Comparable<T>> {
 		this.neighborhood = new ArrayList<Edge>();	
 	}
 	
-		
-	/**
-	 * Constructor para crear instancias con un hijo definido
-	 * 
-	 * @param tag
-	 * @param child
-	 */
-	@SuppressWarnings("rawtypes")
-	public Vertex(T tag, Graph child) {
-		this.tag= tag;
-		this.setChild(child);
-		this.child.setParent(this);
-		this.neighborhood = new ArrayList<Edge>();
-	}
 	
 	
 	/**
@@ -139,46 +130,36 @@ public class Vertex<T extends Comparable<T>> {
 	 * 			ArrayList con los vértices adyacentes
 	 */
 	public ArrayList<Edge> getNeighbors(){
-		return new ArrayList<Edge>(this.neighborhood);
+		return this.neighborhood;
 	}
 
 	/**
 	 * Getters y setters 
 	 */ 
 
-	@SuppressWarnings("rawtypes")
-	public Vertex getParent() {
-		return parent;
+
+	public Integer getDistance() {
+		return distance;
 	}
 
-	/**
-	 * @param parent
-	 */
-	@SuppressWarnings("rawtypes")
-	public void setParent(Vertex parent) {
-		this.parent = parent;
-	}
-	
-	/**
-	 * @param parent
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	public Vertex setParent1(Vertex parent) {
-		this.parent = parent;
-		return this.parent;
+
+
+	public void setDistance(Integer minDistance) {
+		this.distance = minDistance;
 	}
 
+
+
 	@SuppressWarnings("rawtypes")
-	public Graph getChild() {
-		return child;
+	public Vertex getPrevious() {
+		return previous;
 	}
 
-	/**
-	 * @param child
-	 */
+
+
 	@SuppressWarnings("rawtypes")
-	public void setChild(Graph child) {
-		this.child = child;
+	public void setPrevious(Vertex previous) {
+		this.previous = previous;
 	}
+
 }

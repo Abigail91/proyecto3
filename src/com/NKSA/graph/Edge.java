@@ -1,5 +1,10 @@
 package com.NKSA.graph;
 
+/**
+ * 
+ * @author NKSA
+ *
+ */
 public class Edge implements Comparable<Edge>{
 	
 	
@@ -8,7 +13,7 @@ public class Edge implements Comparable<Edge>{
 	 */
 	@SuppressWarnings("rawtypes")
 	private Vertex vertex1, vertex2;
-	private int weight;
+	private Integer weight;
 	
 	
 	/**
@@ -33,7 +38,7 @@ public class Edge implements Comparable<Edge>{
 	 * @param weight
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Edge(Vertex v1, Vertex v2, int weight) {
+	public Edge(Vertex v1, Vertex v2, Integer weight) {
 		if(v1.getTag().compareTo(v2.getTag()) <= 0) {
 			this.vertex1 = v1;
 			this.vertex2 = v2;
@@ -86,14 +91,14 @@ public class Edge implements Comparable<Edge>{
 	/**
 	 * @return
 	 */
-	public int getWeight() {
+	public Integer getWeight() {
 		return weight;
 	}
 
 	/**
 	 * @param weight
 	 */
-	public void setWeight(int weight) {
+	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
 	
